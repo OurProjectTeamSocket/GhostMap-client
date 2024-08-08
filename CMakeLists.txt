@@ -4,7 +4,7 @@ project(GhostMap-client VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Positioning Location Network)
 
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -17,6 +17,7 @@ qt_add_qml_module(appGhostMap-client
     VERSION 1.0
     QML_FILES
         Main.qml
+        RESOURCES android/AndroidManifest.xml android/build.gradle android/res/values/libs.xml android/res/xml/qtprovider_paths.xml android/gradle/wrapper/gradle-wrapper.jar android/gradle/wrapper/gradle-wrapper.properties android/gradle.properties android/gradlew android/gradlew.bat
 )
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
@@ -31,7 +32,7 @@ set_target_properties(appGhostMap-client PROPERTIES
 )
 
 target_link_libraries(appGhostMap-client
-    PRIVATE Qt6::Quick
+    PRIVATE Qt6::Quick Qt6::Positioning Qt6::Location Qt6::Network
 )
 
 include(GNUInstallDirs)
