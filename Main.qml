@@ -13,24 +13,101 @@ Window {
         id: top
 
         width: window.width
-        height: window.height/5
+        height: window.height/8
 
         color: "black"
+
+        Rectangle {
+            id: searchbar
+
+            width: top.width/1.2
+            height: top.height/2
+
+            color: "white"
+
+            x: top.width/2 - searchbar.width/2
+            y: top.height/2 - searchbar.height/2
+
+            radius: 10
+        }
+
     }
 
     Rectangle {
         id: bottom
 
         width: window.width
-        height: window.height/5
+        height: window.height/8
 
         color: "black"
 
         y: window.height - bottom.height
+
+        Row {
+
+            anchors{
+                horizontalCenter: parent.horizontalCenter
+                verticalCenter: parent.verticalCenter
+            }
+            height: parent.height
+            width: childrenRect.width
+            spacing: 60
+
+            Rectangle {
+                id: one
+
+                width: bottom.width/8
+                height: bottom.height/2
+
+                color: "white"
+
+                // x: bottom.width/3
+                y: bottom.height/2 - height/2
+
+                radius: 10
+            }
+
+            Rectangle {
+                id: two
+
+                width: bottom.width/8
+                height: bottom.height/2
+
+                color: "white"
+
+                // x: bottom.width/2
+                y: bottom.height/2 - height/2
+
+                radius: 10
+            }
+
+            Rectangle {
+                id: three
+
+                width: bottom.width/8
+                height: bottom.height/2
+
+                color: "white"
+
+                // x: bottom.width
+                y: bottom.height/2 - height/2
+
+                radius: 10
+            }
+        }
+
     }
 
     PositionSource {
         id: positionSource
+        updateInterval: 1000
+        active: true
+        preferredPositioningMethods: PositionSource.AllPositioningMethods
+
+        onPositionChanged: {
+            var position = positionSource.position.coordinate
+            console.log("Latitude: " + position.latitude + "\nLongitude: " + position.longitude)
+        }
     }
 
     Plugin {
@@ -40,19 +117,31 @@ Window {
 
     Rectangle {
         id: mapBox
-        y: top.height
 
         height: window.height - ( top.height + bottom.height )
         width: window.width
+
+        y: top.height
 
         Map {
             id: map
             anchors.fill: parent
             plugin: mapPlugin
-            // center: QtPositioning.coordinate(positionSource.position.coordinate)
-            center: QtPositioning.coordinate(0, 0)
+            center: QtPositioning.coordinate(positionSource.position.coordinate.latitude, positionSource.position.coordinate.longitude)
+            // center: QtPositioning.coordinate(0, 0)
             zoomLevel: 14
             property geoCoordinate startCentroid
+
+            MapCircle {
+                center {
+                    latitude: positionSource.position.coordinate.latitude
+                    longitude: positionSource.position.coordinate.longitude
+                }
+                radius: 3.0
+                color: 'purple'
+                border.width: 3
+                opacity: 0.8
+            }
 
             PinchHandler {
                 id: pinch
